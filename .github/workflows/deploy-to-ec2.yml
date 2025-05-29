@@ -30,7 +30,7 @@ jobs:
         username: ubuntu
         key: ${{ secrets.EC2_SSH_KEY }} # Reutilize a mesma chave SSH
         script: |
-          echo "Navegando para o diretório da aplicação..."
+          echo "Navegando para o diretório da aplicação...."
           cd /var/www/html/LaravelAplicacao/hdcevents/ # <-- Atenção ao seu subdiretório!
 
           echo "Instalando dependências do Composer..."
