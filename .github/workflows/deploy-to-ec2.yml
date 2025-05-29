@@ -11,7 +11,7 @@ jobs:
     - name: Checkout the files
       uses: actions/checkout@v4
 
-    - name: Copy files with SSH
+    - name: Copy files with SSH # Este passo copia os arquivos, EXCLUINDO o 'vendor'
       uses: easingthemes/ssh-deploy@main
       env:
         SSH_PRIVATE_KEY: ${{secrets.EC2_SSH_KEY}}
@@ -20,7 +20,7 @@ jobs:
         REMOTE_HOST: "ec2-44-201-175-173.compute-1.amazonaws.com"
         REMOTE_USER: "ubuntu"
         TARGET: "/var/www/html/LaravelAplicacao/"
-        EXCLUDE: "/dist/, /vendor/, /node_modules/, **.env" # << Continua excluindo, o que é CORRETO!
+        EXCLUDE: "/dist/, /vendor/, /node_modules/, **.env" # EXCLUINDO vendor, o que é CORRETO!
 
     # NOVO PASSO: Executar comandos no EC2 via SSH
     - name: Run post-deployment commands on EC2
@@ -30,8 +30,9 @@ jobs:
         username: ubuntu
         key: ${{ secrets.EC2_SSH_KEY }} # Reutilize a mesma chave SSH
         script: |
-          echo "Navegando para o diretório da aplicação...."
-          cd /var/www/html/LaravelAplicacao/hdcevents/ # <-- Atenção ao seu subdiretório!
+          echo "Navegando para o diretório da aplicação..."
+          # ******* ATENÇÃO AO CAMINHO CORRETO AGORA! *******
+          cd /var/www/html/LaravelAplicacao/hdcevents/
 
           echo "Instalando dependências do Composer..."
           # Certifique-se que o Composer está instalado no EC2!
@@ -43,12 +44,12 @@ jobs:
             cp .env.example .env
           fi
           # GERE A APP_KEY se ela não estiver no .env ou garanta que está configurada
-          # php artisan key:generate
+          php artisan key:generate # Isso vai gerar se não existir
           # Ou, se você passar a APP_KEY como secret do GH:
           # sed -i "s|^APP_KEY=.*|APP_KEY=${{ secrets.APP_KEY }}|" .env
           #
           # Configure outras variáveis do .env com secrets, se aplicável
-          # Exemplo:
+          # Exemplo (ajuste conforme suas secrets e variáveis):
           # sed -i "s|^DB_DATABASE=.*|DB_DATABASE=${{ secrets.DB_DATABASE }}|" .env
           # sed -i "s|^DB_USERNAME=.*|DB_USERNAME=${{ secrets.DB_USERNAME }}|" .env
           # sed -i "s|^DB_PASSWORD=.*|DB_PASSWORD=${{ secrets.DB_PASSWORD }}|" .env
