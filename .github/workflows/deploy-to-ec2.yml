@@ -31,7 +31,7 @@ jobs:
         key: ${{ secrets.EC2_SSH_KEY }} # Reutilize a mesma chave SSH
         script: |
           echo "Navegando para o diretório da aplicação..."
-          # ******* ATENÇÃO AO CAMINHO CORRETO AGORA! *******
+          # ******* ATENÇÃO AO CAMINHO CORRETO AGORA!! *******
           cd /var/www/html/LaravelAplicacao/hdcevents/
 
           echo "Instalando dependências do Composer..."
