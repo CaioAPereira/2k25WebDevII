@@ -1,0 +1,32 @@
+@extends('layouts.main')
+
+@section('title', 'Caio Events')
+
+@section('content')
+
+<h1>Algum título</h1>
+
+<img src="/img/banner.jpg" alt="" srcset="">
+@if (10 > 5)
+    <p class="">A condição é true</p>
+    <p>{{ $nome }}</p>
+@endif
+
+
+@for ($i = 0; $i < count($arr); $i++)
+    <p>{{ $arr[$i] }} </p>
+@endfor
+
+@foreach ($nomes as $nome)
+    <p>{{ $loop->index }} </p>
+    <p>{{ $nome }} </p>
+@endforeach
+
+@php
+    $name = 'Libero';
+    echo $name;
+@endphp
+
+{{-- Comentario no Blade --}}
+
+@endsection
