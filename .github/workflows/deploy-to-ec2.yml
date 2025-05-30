@@ -19,7 +19,7 @@ jobs:
         SOURCE: "./"
         REMOTE_HOST: "ec2-3-86-91-45.compute-1.amazonaws.com"
         REMOTE_USER: "ubuntu"
-        TARGET: "/var/www/html/LaravelAplicacao/"
+        TARGET: "/var/www/html/AplicacaoLaravel/"
         EXCLUDE: "/dist/, /vendor/, /node_modules/, **.env" # EXCLUINDO vendor, o que é CORRETO!
 
     # NOVO PASSO: Executar comandos no EC2 via SSH
@@ -32,7 +32,7 @@ jobs:
         script: |
           echo "Navegando para o diretório da aplicação..."
           # ******* ATENÇÃO AO CAMINHO CORRETO AGORA!! *******
-          cd /var/www/html/hdcevents/
+          cd /var/www/html/AplicacaoLaravel/hdcevents/
 
           echo "Instalando dependências do Composer..."
           # Certifique-se que o Composer está instalado no EC2!
