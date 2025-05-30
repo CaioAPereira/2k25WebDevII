@@ -1,0 +1,79 @@
+name: Push-to-EC2
+on:
+  push:
+    branches:
+      - main
+jobs:
+  deploy:
+    name: Deploy to EC2
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout the files
+      uses: actions/checkout@v4
+
+    - name: Copy files with SSH # Este passo copia os arquivos, EXCLUINDO o 'vendor'
+      uses: easingthemes/ssh-deploy@main
+      env:
+        SSH_PRIVATE_KEY: ${{secrets.EC2_SSH_KEY}}
+        ARGS: "-rltgoDzvO --delete"
+        SOURCE: "./"
+        REMOTE_HOST: "ec2-44-201-175-173.compute-1.amazonaws.com"
+        REMOTE_USER: "ubuntu"
+        TARGET: "/var/www/html/LaravelAplicacao/"
+        EXCLUDE: "/dist/, /vendor/, /node_modules/, **.env" # EXCLUINDO vendor, o que é CORRETO!
+
+    # NOVO PASSO: Executar comandos no EC2 via SSH
+    - name: Run post-deployment commands on EC2
+      uses: appleboy/ssh-action@master # Ação ideal para executar comandos remotos
+      with:
+        host: ec2-44-201-175-173.compute-1.amazonaws.com # Seu hostname/IP
+        username: ubuntu
+        key: ${{ secrets.EC2_SSH_KEY }} # Reutilize a mesma chave SSH
+        script: |
+          echo "Navegando para o diretório da aplicação..."
+          # ******* ATENÇÃO AO CAMINHO CORRETO AGORA!! *******
+          cd /var/www/html/LaravelAplicacao/hdcevents/
+
+          echo "Instalando dependências do Composer..."
+          # Certifique-se que o Composer está instalado no EC2!
+          composer install --no-dev --optimize-autoloader
+
+          echo "Verificando e configurando o arquivo .env..."
+          # Crie o .env se não existir (o deploy não copia)
+          if [ ! -f .env ]; then
+            cp .env.example .env
+          fi
+          # GERE A APP_KEY se ela não estiver no .env ou garanta que está configurada
+          php artisan key:generate # Isso vai gerar se não existir
+          # Ou, se você passar a APP_KEY como secret do GH:
+          # sed -i "s|^APP_KEY=.*|APP_KEY=${{ secrets.APP_KEY }}|" .env
+          #
+          # Configure outras variáveis do .env com secrets, se aplicável
+          # Exemplo (ajuste conforme suas secrets e variáveis):
+          # sed -i "s|^DB_DATABASE=.*|DB_DATABASE=${{ secrets.DB_DATABASE }}|" .env
+          # sed -i "s|^DB_USERNAME=.*|DB_USERNAME=${{ secrets.DB_USERNAME }}|" .env
+          # sed -i "s|^DB_PASSWORD=.*|DB_PASSWORD=${{ secrets.DB_PASSWORD }}|" .env
+          # sed -i "s|^APP_URL=.*|APP_URL=http://ec2-44-201-175-173.compute-1.amazonaws.com|" .env
+          # sed -i "s|^APP_DEBUG=.*|APP_DEBUG=false|" .env
+          # sed -i "s|^APP_ENV=.*|APP_ENV=production|" .env
+
+          echo "Otimizando e limpando caches do Laravel..."
+          php artisan optimize:clear # Limpa caches antigos
+          php artisan config:cache # Cria cache de configuração
+          php artisan route:cache # Cria cache de rotas
+          php artisan view:cache # Cria cache de views
+
+          echo "Executando migrações do banco de dados (se houver)..."
+          php artisan migrate --force # Use --force para evitar prompt em produção
+
+          echo "Definindo permissões de arquivos e pastas..."
+          sudo chown -R www-data:www-data storage bootstrap/cache
+          sudo chmod -R 775 storage bootstrap/cache
+          # Opcional: ajustar permissões para o usuário 'ubuntu' editar
+          # sudo usermod -a -G www-data ubuntu
+          # sudo chown -R ubuntu:www-data .
+          # sudo chmod -R 775 .
+
+          echo "Reiniciando o Apache..."
+          sudo systemctl restart apache2
+          echo "Deploy concluído!"
