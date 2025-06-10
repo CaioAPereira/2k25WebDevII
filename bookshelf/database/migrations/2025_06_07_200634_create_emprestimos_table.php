@@ -11,18 +11,19 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('livros', function (Blueprint $table) {
+        Schema::create('emprestimos', function (Blueprint $table) {
+            /* Criando o campo id, chave primária */
             $table->id();
 
             /* Criando campos no banco relacionado aos livros */
-            $table->string('titulo');
-            $table->string('autor');
-            $table->dateTime('data_publicacao');
-            $table->string('genero');
-            $table->rememberToken();
-            $table->string('image');
-            $table->timestamps();
+            $table->dateTime('data_emprestimo');
             
+            /* Referenciando à livro, chave estrangeira */
+            $table->foreignId('livro_id')
+                ->constrained('livros')
+                ->onDelete('cascade');
+
+            $table->timestamps();
         });
     }
 
@@ -31,6 +32,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('livros');
+        Schema::dropIfExists('emprestimos');
     }
 };

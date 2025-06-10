@@ -32,10 +32,14 @@
                         <a href="/" class="nav-link">Eventos</a>
                     </li>
                     <li class="nav-item">
-                        <a href="/events/create" class="nav-link">Criar Eventos</a>
+                        <a href="/livros/create" class="nav-link">Cadastrar Livros</a>
                     </li>
                     <li class="nav-item">
+<<<<<<< HEAD
                         <a href="/" class="nav-link">Entrar</a>
+=======
+                        <a href="/livros/dashboard" class="nav-link">Meus Livros</a>
+>>>>>>> 98d9e50 (bookshelf v1.0.0)
                     </li>
                     <li class="nav-item">
                         <a href="/" class="nav-link">Cadastrar</a>
@@ -56,7 +60,7 @@
         </div>
     </main>
     <footer>
-        <p>Caio Events &copy; 2025</p>
+        <p>Bookshelf Livros &copy; 2025</p>
     </footer>
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
