@@ -35,11 +35,7 @@
                         <a href="/livros/create" class="nav-link">Cadastrar Livros</a>
                     </li>
                     <li class="nav-item">
-<<<<<<< HEAD
-                        <a href="/" class="nav-link">Entrar</a>
-=======
                         <a href="/livros/dashboard" class="nav-link">Meus Livros</a>
->>>>>>> 98d9e50 (bookshelf v1.0.0)
                     </li>
                     <li class="nav-item">
                         <a href="/" class="nav-link">Cadastrar</a>
