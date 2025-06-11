@@ -15,7 +15,7 @@ class LivroController extends Controller
 
         if ($search) {
             $livros = Livro::where([
-                ['title', 'like', '%' . $search . '%'],
+                ['titulo', 'like', '%' . $search . '%'],
             ])->get();
         } else {
             $livros = Livro::all();
@@ -33,12 +33,11 @@ class LivroController extends Controller
     {
         $Livro = new Livro();
 
-        $Livro->title = $request->title;
-        $Livro->date = $request->date;
-        $Livro->city = $request->city;
-        $Livro->private = $request->private;
-        $Livro->description = $request->description;
-        $Livro->items = $request->items;
+        /* Campo no bd = Campo no view */
+        $Livro->titulo = $request->titulo;
+        $Livro->data_publicacao = $request->data_publicacao;
+        $Livro->genero = $request->genero;
+        $Livro->autor = $request->autor;
 
         // Image Upload
         if ($request->hasFile('image') && $request->file('image')->isValid()) {
@@ -57,22 +56,23 @@ class LivroController extends Controller
 
             $Livro->image = $imageName;
         }
-
+/*
         $user = auth()->user();
         $Livro->user_id = $user->id;
-
+*/
         $Livro->save();
 
-        return redirect('/')->with('msg', 'Livroo criado com sucesso!');
+        return redirect('/')->with('msg', 'Livro criado com sucesso!');
     }
 
     public function show($id)
     {
-        $Livro = Livro::findOrFail($id);
+        $livro = Livro::findOrFail($id);
 
         $user = auth()->user();
         $hasUserJoined = false;
 
+        /*
         if ($user) {
             $userlivros = $user->livrosAsParticipant->toArray();
 
@@ -82,13 +82,10 @@ class LivroController extends Controller
                 }
             }
         }
-
-        $LivroOwner = User::where('id', $Livro->user_id)->first()->toArray();
+        */
 
         return view('livros.show', [
-            'Livro' => $Livro,
-            'LivroOwner' => $LivroOwner,
-            'hasUserJoined' => $hasUserJoined,
+            'livro' => $livro
         ]);
     }
 

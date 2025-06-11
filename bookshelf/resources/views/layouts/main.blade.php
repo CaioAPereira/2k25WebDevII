@@ -29,17 +29,35 @@
                 </a>
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a href="/" class="nav-link">Eventos</a>
+                        <a href="/" class="nav-link">Coleção</a>
                     </li>
                     <li class="nav-item">
-                        <a href="/livros/create" class="nav-link">Cadastrar Livros</a>
+                        <a href="/livros/create" class="nav-link">Inserir Livros</a>
+                    </li>
+                    @auth
+                    <li class="nav-item">
+                        <a href="/dashboard" class="nav-link">Meus livros</a>
                     </li>
                     <li class="nav-item">
-                        <a href="/livros/dashboard" class="nav-link">Meus Livros</a>
+                        <form action="/logout" method="POST">
+                            @csrf
+                            <a href="/logout"
+                                class="nav-link"
+                                onclick="event.preventDefault();
+                                this.closest('form').submit();">
+                                Sair
+                            </a>
+                        </form>
+                    </li>
+                    @endauth
+                    @guest
+                    <li class="nav-item">
+                        <a href="/login" class="nav-link">Entrar</a>
                     </li>
                     <li class="nav-item">
-                        <a href="/" class="nav-link">Cadastrar</a>
+                        <a href="/register" class="nav-link">Cadastrar</a>
                     </li>
+                    @endguest
                 </ul>
             </div>
         </nav>

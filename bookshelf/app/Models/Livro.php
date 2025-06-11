@@ -11,7 +11,7 @@ class Livro extends Model
 
     protected $casts = [
         'items' => 'array',
-        'date' => 'datetime', // <-- Adicione esta linha!
+        'data_publicacao' => 'datetime'
     ];
 
     protected $guarded = [];
