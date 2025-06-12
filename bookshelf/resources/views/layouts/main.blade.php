@@ -12,6 +12,10 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto" rel="stylesheet">
 
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script&family=Danfo&family=Domine:wght@400..700&family=Indie+Flower&family=Lobster&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Poppins" rel="stylesheet">
+
     <!-- Bootstrap da aplicação -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" crossorigin="anonymous">
 
@@ -25,9 +29,11 @@
         <nav class="navbar navbar-expand-lg navbar-light">
             <div class="collapse navbar-collapse" id="navbar">
                 <a href="/" class="navbar-brand">
-                    <img src="/img/hdcevents_logo.svg" alt="HDC Events">
+                    <img src="/img/logo-bookshelf.png" alt="Bookshelf">
+                     BookShelf Livros
                 </a>
-                <ul class="navbar-nav">
+
+<ul class="navbar-nav">
                     <li class="nav-item">
                         <a href="/" class="nav-link">Coleção</a>
                     </li>
@@ -45,7 +51,7 @@
                                 class="nav-link"
                                 onclick="event.preventDefault();
                                 this.closest('form').submit();">
-                                Sair
+                                <ion-icon name="exit" id="sair"></ion-icon>
                             </a>
                         </form>
                     </li>

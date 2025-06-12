@@ -1,6 +1,6 @@
 /* General */
 * {
-  font-family: 'Roboto';
+  font-family: 'Poppins';
 }
 
 body {
@@ -23,13 +23,21 @@ header {
 }
 
 .btn-primary {
-  background-color: #F2A340;
-  border: 2px solid #C28008;
+  background-color: #2b00ec;
+  border: 2px solid #180083;
+}
+
+.btn-danger {
+  background-color: #f59f00;
+}
+
+.btn-danger:hover {
+  background-color: #c58700;
 }
 
 .btn-primary:hover {
-  background-color: #C28008;
-  border-color: #C28008;
+  background-color: #000288;
+  border-color: #3700ff;
 }
 
 .msg {
@@ -51,6 +59,8 @@ header {
   justify-content: space-between;
   background-color: #FFF;
   padding: 5px 0;
+  margin-left: 15px;
+  margin-right: 15px;
 }
 
 #navbar a {
@@ -59,12 +69,12 @@ header {
 }
 
 #navbar a:hover {
-  color: #F2A340;
+  color: #1b01ad;
 }
 
 /* Search Container */
 #search-container {
-  background-image: url("../img/banner.jpg");
+  background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0)), url("../img/book.jpg");
   background-size: cover;
   background-position: center;
   height: 400px;
@@ -73,14 +83,41 @@ header {
 }
 
 #search-container h1 {
-  color: #F2A340;
-  margin-bottom: 30px;
-  font-weight: 900;
+  color: #ffffff;
+  margin-top: 70px;
+  margin-bottom: 20px;
+  font-weight: bolder;
 }
 
 #search-container form {
   width: 50%;
   margin: 0 auto;
+}
+
+#search-container button {
+  background-color: #2b00ec;
+  border: solid 1px #000288;
+  border-radius: 10px;
+  width: 50px;
+  color: #FFF;
+}
+
+
+/* Página cadastro */
+#titulo-genero {
+  margin-bottom: 10px;
+  margin-left: 0;
+}
+
+#livro-create-title {
+  text-align: center;
+  font-weight: 900;
+}
+
+.imargem-create {
+  display: flex;
+  justify-content: center;
+  margin-left: 7px;
 }
 
 /* Events list */
@@ -101,6 +138,16 @@ header {
   display: flex;
 }
 
+#cards-container img {
+  max-height: 250px;
+  max-width: 200px;
+}
+
+.image-container-welcome {
+  display: flex;
+  justify-content: center;
+}
+
 #events-container .card {
   flex: 1 1 24%;
   max-width: 25%;
@@ -109,8 +156,13 @@ header {
   margin: .5%;
 }
 
+#title-mais-emprestados {
+  margin-top: 40px;
+  margin-bottom: 0;
+}
+
 #events-container img {
-  max-height: 150px;
+  max-height: 100px;
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
 }
@@ -124,12 +176,23 @@ header {
   color: #212121;
   font-size: 20px;
   font-weight: bold;
-  margin-bottom: 30px;
+  margin-bottom: 0;
 }
 
 .card-participants {
   font-size: 14px;
   color: #757575;
+}
+
+
+#sair {
+  color: red;
+  width: 30px;
+  height: 20px;
+}
+
+#sair:hover {
+  color: rgb(130, 0, 0);
 }
 
 /* Event create page */
@@ -153,8 +216,15 @@ header {
   margin-top: 30px;
 }
 
+#image-container {
+  display: flex;
+  justify-content: center;
+}
+
 #image-container img {
   border-radius: 10px;
+  max-height: 400px;
+  min-height: 400px;
 }
 
 #info-container h1 {
@@ -176,7 +246,7 @@ header {
 
 #info-container ion-icon {
   font-size: 20px;
-  color: #F2A340;
+  color: #180090;
   margin-right: 5px;
 }
 
@@ -197,4 +267,28 @@ footer {
 
 footer p {
   margin-bottom: 0;
+}
+
+.edit-btn {
+  background-color: #0004da;
+  color: #FFF;
+}
+
+.edit-btn:hover {
+  background-color: #000478;
+  color: #FFF;
+}
+
+.delete-btn {
+  background-color: red;
+  color: #FFF;
+}
+
+.delete-btn:hover {
+  background-color: rgb(131, 0, 0);
+  color: #FFF;
+}
+
+#livo-autor {
+  margin-top: 0;
 }

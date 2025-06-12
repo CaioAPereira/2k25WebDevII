@@ -6,7 +6,7 @@
 
 {{-- Tabela 1: Meus Livros (os que eu criei) --}}
 <div class="col-md-10 offset-md-1 dashboard-title-container">
-    <h1>Meus Livros</h1>
+    <h2>Meus Livros</h2>
 </div>
 <div class="col-md-10 offset-md-1 dashboard-livros-container">
     @if(count($livros) > 0)
@@ -15,8 +15,8 @@
             <tr>
                 <th scope="col">#</th>
                 <th scope="col">Nome</th>
-                <th scope="col">Participantes</th>
-                <th scope="col">Ações</th>
+                <th scope="col">Empréstimos</th>
+                <th scope="col">Ações (Editar/Deletar)</th>
             </tr>
         </thead>
         <tbody>
@@ -32,12 +32,12 @@
                     <td>{{ $livro->users_count }}</td>
 
                     <td>
-                        <a href="/livros/edit/{{ $livro->id }}" class="btn btn-info edit-btn"><ion-icon name="create-outline"></ion-icon> Editar</a>
+                        <a href="/livros/edit/{{ $livro->id }}" class="btn btn-info edit-btn"><ion-icon name="create"></ion-icon></a>
                         {{-- Adicionado style="display:inline;" para os botões ficarem na mesma linha --}}
                         <form action="/livros/{{ $livro->id }}" method="POST" style="display:inline;">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="btn btn-danger delete-btn"><ion-icon name="trash-outline"></ion-icon> Deletar</button>
+                            <button type="submit" class="btn btn-danger delete-btn"><ion-icon name="trash"></ion-icon></button>
                         </form>
                     </td>
                 </tr>
@@ -51,7 +51,7 @@
 
 {{-- Tabela 2: Livros que emprestei (que eu participo) --}}
 <div class="col-md-10 offset-md-1 dashboard-title-container">
-    <h1>Livros que emprestei</h1>
+    <h2>Livros que tenho emprestado</h2>
 </div>
 <div class="col-md-10 offset-md-1 dashboard-livros-container">
 @if(count($livrosasparticipant) > 0)
@@ -74,9 +74,7 @@
                     <form action="{{ route('livros.devolver', $livro->id) }}" method="POST">
                         @csrf
                         @method("DELETE")
-                        <button type="submit" class="btn btn-danger delete-btn">
-                            <ion-icon name="trash-outline"></ion-icon> Devolver
-                        </button>
+                        <button type="submit" class="btn btn-danger delete-btn"><ion-icon name="backspace"></ion-icon></button>
                     </form>
                 </td>
             </tr>
