@@ -17,12 +17,13 @@ return new class extends Migration
             /* Criando campos no banco relacionado aos livros */
             $table->string('titulo');
             $table->string('autor');
-            $table->dateTime('data_publicacao');
+            $table->date('data_publicacao');
             $table->string('genero');
-            $table->rememberToken();
-            $table->string('image');
+            /* ID do usuário que cadastrou o livro */
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->string('image')->nullable();
             $table->timestamps();
-            
+
         });
     }
 

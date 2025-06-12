@@ -38,6 +38,8 @@ class LivroController extends Controller
         $Livro->data_publicacao = $request->data_publicacao;
         $Livro->genero = $request->genero;
         $Livro->autor = $request->autor;
+        /* Captura o ID do usuário autenticado para salvar no livro que o cadastrou */
+        $Livro->user_id = auth()->user()->id;
 
         // Image Upload
         if ($request->hasFile('image') && $request->file('image')->isValid()) {
@@ -56,10 +58,7 @@ class LivroController extends Controller
 
             $Livro->image = $imageName;
         }
-/*
-        $user = auth()->user();
-        $Livro->user_id = $user->id;
-*/
+
         $Livro->save();
 
         return redirect('/')->with('msg', 'Livro criado com sucesso!');
@@ -67,25 +66,18 @@ class LivroController extends Controller
 
     public function show($id)
     {
-        $livro = Livro::findOrFail($id);
-
-        $user = auth()->user();
+        $livro = Livro::with('users')->findOrFail($id);
+        $donoDoLivro = User::find($livro->user_id);
         $hasUserJoined = false;
 
-        /*
-        if ($user) {
-            $userlivros = $user->livrosAsParticipant->toArray();
-
-            foreach ($userlivros as $userLivro) {
-                if ($userLivro['id'] == $id) {
-                    $hasUserJoined = true;
-                }
-            }
+        if (auth()->check()) {
+            $hasUserJoined = $livro->users->contains(auth()->user());
         }
-        */
 
         return view('livros.show', [
-            'livro' => $livro
+            'livro' => $livro,
+            'donoDoLivro' => $donoDoLivro,
+            'hasUserJoined' => $hasUserJoined,
         ]);
     }
 
@@ -93,7 +85,8 @@ class LivroController extends Controller
     {
         $user = auth()->user();
 
-        $livros = $user->livros;
+        // Aqui usamos withCount('users') porque o relacionamento no Model Livro se chama 'users'
+        $livros = $user->livros()->withCount('users')->get();
 
         $livrosAsParticipant = $user->livrosAsParticipant;
 
@@ -116,69 +109,73 @@ class LivroController extends Controller
     public function edit($id)
     {
         $user = auth()->user();
+        $livro = Livro::findOrFail($id);
 
-        $Livro = Livro::findOrFail($id);
-
-        if ($user->id != $Livro->user_id) {
-            return redirect('/dashboard');
+        // Garante que o usuário só pode editar os próprios livros
+        if ($user->id != $livro->user_id) {
+            return redirect('/dashboard')->with('msg', 'Acesso negado!');
         }
 
-        return view('livros.edit', ['Livro' => $Livro]);
+        // Passa os dados do livro para a view
+        return view('livros.edit', ['livro' => $livro]);
     }
 
-    public function update(Request $request)
+    public function update(Request $request, $id)
     {
-        $data = $request->all();
+        // <--- A CORREÇÃO ESTÁ AQUI
+        // Validação dos dados recebidos do formulário
+        $request->validate([
+            'titulo' => 'required|string|max:255',
+            'autor' => 'required|string|max:255',
+            'data_publicacao' => 'required|date',
+            'genero' => 'required|string',
+            'image' => 'nullable|image', // A imagem é opcional na edição
+        ]);
 
-        // Image Upload
+        $data = $request->except('_token', '_method'); // Pega todos os dados, exceto o token e o método
+
+        // Lida com o upload da imagem SE uma nova imagem for enviada
         if ($request->hasFile('image') && $request->file('image')->isValid()) {
             $requestImage = $request->image;
-
             $extension = $requestImage->extension();
-
             $imageName =
                 md5($requestImage->getClientOriginalName() . strtotime('now')) .
                 '.' .
                 $extension;
-
             $requestImage->move(public_path('img/livros'), $imageName);
 
+            // Adiciona o novo nome da imagem aos dados que serão atualizados
             $data['image'] = $imageName;
         }
 
-        Livro::findOrFail($request->id)->update($data);
+        // Encontra o livro pelo ID e atualiza com os novos dados
+        Livro::findOrFail($id)->update($data);
 
         return redirect('/dashboard')->with(
             'msg',
-            'Livroo editado com sucesso!'
+            'Livro editado com sucesso!'
         );
     }
 
-    public function joinLivro($id)
+    public function emprestarLivro($id)
     {
         $user = auth()->user();
-
-        $user->livrosAsParticipant()->attach($id);
-
-        $Livro = Livro::findOrFail($id);
-
+        $livro = Livro::findOrFail($id);
+        $user->livrosAsParticipant()->attach($id, ['data_emprestimo' => now()]);
         return redirect('/dashboard')->with(
             'msg',
-            'Sua presença está confirmada no Livroo ' . $Livro->title
+            'Empréstimo do livro "' . $livro->titulo . '" realizado!'
         );
     }
 
-    public function leaveLivro($id)
+    public function devolverLivro($id)
     {
         $user = auth()->user();
-
+        $livro = Livro::findOrFail($id);
         $user->livrosAsParticipant()->detach($id);
-
-        $Livro = Livro::findOrFail($id);
-
         return redirect('/dashboard')->with(
             'msg',
-            'Você saiu com sucesso do Livroo: ' . $Livro->title
+            'Você devolveu o livro "' . $livro->titulo . '"!'
         );
     }
 }

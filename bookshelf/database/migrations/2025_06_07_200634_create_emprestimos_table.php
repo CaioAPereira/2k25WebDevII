@@ -12,16 +12,20 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('emprestimos', function (Blueprint $table) {
-            /* Criando o campo id, chave primária */
             $table->id();
 
-            /* Criando campos no banco relacionado aos livros */
-            $table->dateTime('data_emprestimo');
-            
-            /* Referenciando à livro, chave estrangeira */
+            // Chave estrangeira para o livro que foi emprestado
             $table->foreignId('livro_id')
-                ->constrained('livros')
-                ->onDelete('cascade');
+                  ->constrained('livros')
+                  ->onDelete('cascade');
+
+            // Chave estrangeira para o usuário que pegou o empréstimo
+            $table->foreignId('user_id')
+                  ->constrained('users')
+                  ->onDelete('cascade');
+
+            // Data em que o empréstimo foi feito
+            $table->date('data_emprestimo');
 
             $table->timestamps();
         });

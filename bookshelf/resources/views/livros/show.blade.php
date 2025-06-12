@@ -5,13 +5,15 @@
 @section('content')
 
     <div class="col-md-10 offset-md-1">
-        <div class="row">
-            <div id="image-container" class="col-md-6">
-                <img src="/img/livros/{{ $livro->image }}" class="img-fluid" alt="{{ $livro->titulo }}">
-            </div>
-            <div id="info-container" class="col-md-6">
-                <h1>{{ $livro->titulo }}</h1>
-                <p class="event-city"><ion-icon name="location-outline"></ion-icon> {{ $livro->autor }}</p>
+    <div class="row">
+        <div id="image-container" class="col-md-6">
+            <img src="/img/livros/{{ $livro->image }}" class="img-fluid" alt="{{ $livro->titulo }}">
+        </div>
+        <div id="info-container" class="col-md-6">
+            <h1>{{ $livro->titulo }}</h1>
+            <p class="livro-owner"><ion-icon name="person-outline"></ion-icon> Dono(a): {{ $donoDoLivro->name }}</p>
+            <p class="livro-participants"><ion-icon name="people-outline"></ion-icon> {{ $livro->users->count() }} Empréstimos</p>
+            <p class="event-city"><ion-icon name="location-outline"></ion-icon> {{ $livro->autor }}</p>
                 {{-- <p class="events-participants"><ion-icon name="people-outline"></ion-icon> {{ count($livros->users) }} Emprestimos</p> --}}
                 <p class="event-city"><ion-icon name="location-outline"></ion-icon> {{ $livro->genero }}</p>
                 <p class="event-city">
@@ -19,9 +21,23 @@
                     {{ $livro->data_publicacao->format('d/m/Y') }}
                 </p>
 
-            </div>
-            <div class="col-md-12" id="description-container">
-            </div>
-        </div>
+            @if(auth()->check())
+                @if(auth()->user()->id == $donoDoLivro->id)
+                    <p class="already-joined-msg">Você é o dono deste livro.</p>
+                @elseif($hasUserJoined)
+                    <p class="already-joined-msg">Você já pegou este livro emprestado!</p>
+                @else
+                    <form action="{{ route('livros.emprestar', $livro->id) }}" method="POST">
+                        @csrf
+                        <button type="submit" class="btn btn-primary">Pegar Emprestado</button>
+                    </form>
+                @endif
+            @else
+                 <p>Você precisa <a href="/login">fazer login</a> para interagir.</p>
+            @endif
 
-    @endsection
+        </div>
+    </div>
+</div>
+
+@endsection

@@ -1,50 +1,44 @@
 <?php
 
-
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LivroController;
 
 /*Rota que Encaminha para Raiz*/
 Route::get('/', [LivroController::class, 'index']);
 /*Rota que Encaminha para Inserção de Livro*/
-Route::get('/livros/create', [LivroController::class, 'create'])->middleware('auth');
+Route::get('/livros/create', [LivroController::class, 'create'])->middleware(
+    'auth'
+);
 /*Rota que Encaminha para amostragem de livro específico*/
 Route::get('/livros/{id}', [LivroController::class, 'show']);
 /*Rota que Encaminha para DashBoard*/
-Route::get('/dashboard', [LivroController::class, 'dashboard'])->middleware('auth');
-
-Route::post('/livros', [LivroController::class, 'store']);
-Route::delete('/livros/{id}', [LivroController::class, 'destroy']);
-Route::get('/livros/edit/{id}', [LivroController::class, 'edit'])->middleware(
+Route::get('/dashboard', [LivroController::class, 'dashboard'])->middleware(
     'auth'
 );
-Route::put('/livros/update/{id}', [
-    LivroController::class,
-    'update',
-])->middleware('auth');
 
+// Rota para cadastrar um livro
+Route::post('/livros', [LivroController::class, 'store']);
 
+// Rota para deletar um livro
+Route::delete('/livros/{id}', [LivroController::class, 'destroy']);
 
-Route::post('/livros/join/{id}', [
-    LivroController::class,
-    'joinLivro',
-])->middleware('auth');
+// Rota para mostrar o formulário de edição
+Route::get('/livros/edit/{id}', [LivroController::class, 'edit'])->name(
+    'livros.edit'
+);
 
-Route::delete('/livros/leave/{id}', [
-    LivroController::class,
-    'leaveLivro',
-])->middleware('auth');
+// Rota para processar a atualização do livro
+Route::put('/livros/update/{id}', [LivroController::class, 'update'])->name(
+    'livros.update'
+);
 
-/*
-Route::get('produtos/', function () {
-
-    $busca = request('search');
-
-    return view('/produtos', ['busca' => $busca]);
+Route::middleware(['auth'])->group(function () {
+    Route::post('/livros/emprestar/{id}', [
+        LivroController::class,
+        'emprestarLivro',
+    ])->name('livros.emprestar');
+    Route::delete('/livros/devolver/{id}', [
+        LivroController::class,
+        'devolverLivro',
+    ])->name('livros.devolver');
 });
-
-Route::get('produtos_teste/{id?}', function ($id = null) {
-
-    return view('/product', ['id' => $id]);
-});
-*/
